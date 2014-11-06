@@ -1,0 +1,21 @@
+GAME = (two -> WIN | one -> WIN | three -> LOSE) ,
+WIN = (win -> GAME) ,
+LOSE = (lose -> GAME) .
+
+MOVE = (ahead -> (right -> MOVE | left -> STOP)) .
+
+DOUBLE = (in.[3] -> out.[3] -> DOUBLE
+		 |in.[2] -> out.[2] -> DOUBLE
+		 |in.[1] -> out.[1] -> DOUBLE
+		 ) .
+
+FOURTICK (N=4) = FOURTICK[0],
+FOURTICK [i:0..N] = (when(i<4) tick->FOURTICK[i+1]
+			     |when(i>4) tick->STOP) .
+
+PERSON = (  weekend -> sleep -> (shop -> PERSON | play -> PERSON) | weekday -> sleep -> work -> PERSON) .
+
+VARIABLE (N=2) = VARIABLE[N],
+VARIABLE [i:0..N] = (write[i] -> VARIABLE[i]
+					|read[i] -> VARIABLE[i-1] 
+					|when(i==0) read[i] -> STOP) .

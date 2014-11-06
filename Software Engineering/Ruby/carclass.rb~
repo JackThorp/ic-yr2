@@ -1,0 +1,11 @@
+
+
+class Car
+  def drive
+    puts "We are driving along..."
+  end
+end
+
+my_car = Car.new
+my_car.drive()
+

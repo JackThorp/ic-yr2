@@ -1,0 +1,10 @@
+
+CONTROL (M=4) = CONTROL[0],
+CONTROL[i:0..M] = (when(i<M) passenger -> CONTROL[i+1]
+				  |when(i==M) signal -> return -> CONTROL).
+
+CAR = (signal -> crazyRide -> return -> CAR).  
+
+TURNSTILE = (passenger -> TURNSTILE).
+
+||ROLLERCOASTER = (CONTROL || CAR || TURNSTILE).

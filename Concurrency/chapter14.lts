@@ -1,0 +1,37 @@
+
+//fluent HAS_FORK = <get, put>
+
+const N = 5
+range R = 0..(N-1)
+
+FORK = (get -> put -> FORK).
+PHIL = (sitdown -> right.get -> left.get -> eat -> right.put -> left.put -> arise -> PHIL).
+
+||DINERS(N=5)= forall [i:0..N-1]
+	(phil[i]:PHIL ||
+	{phil[i].left,phil[((i-1)+N)%N].right}::FORK
+	).
+
+
+fluent HasLeft[i:R] = <phil[i].left.get, phil[i].left.put>
+fluent HasRight[i:R] = <phil[i].right.get, phil[i].right.put>
+
+
+assert ExFork = forall [i:R] [] !(HasLeft[i] && HasRight[((i-1)+N)%N])
+
+// X (temporal operator)  that checks property for all states directly after the initial state.
+// XX checks assertion is true for all states that are two transitions from the initial
+// XXX checks assertion is true for all states three transitions from the initial .... 
+//fluent EXFORK[i:1..N] = [](phil[i].left.get && phil[((i-1)+N)%N].right.get)
+
+// The ':' in phil[i]:PHIL means prefix all actions in PHIL by phil[i].
+// The '::' in {phil[i].left,phil[((i-1)+N)%N].right}::FORK means prefis all the actions in FORK by the set {...}, this means either action can occur.
+// The fork is shared. 
+
+//b)
+
+fluent Hungy[i:R] = <phil[i].sitDown, phil[i].eat>
+//fluent Eats[i:R] = <phil[i].eat>
+
+assert WillEat = forall [i:R] [] (Hungry[i] -> <> phil[i].eat)
+

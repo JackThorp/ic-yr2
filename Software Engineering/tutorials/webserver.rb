@@ -1,0 +1,30 @@
+require "sinatra"
+require "haml"
+
+# ?? What is the difference between ' and " ?
+
+#set up network config
+
+set :bind, '0.0.0.0'
+set :port, 4567
+
+#web routes
+
+get "/hello" do
+	haml :simpleHtml
+end
+
+get "/login" do
+	haml :login
+end
+
+post "/login" do
+	username = params[:username]
+	password = params[:password]
+	if(username == 'jack' && password == 'pass')
+		haml :simpleHtml
+	else 
+		haml :login
+	end
+end
+

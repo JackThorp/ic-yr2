@@ -1,0 +1,6 @@
+// 2.2 A variable stores values in the range 0..N and supports actions
+// read and write. Model the variable as a process, VARIABLE, using FSP.
+
+VARIABLE (N=2) = (write[y:0..N] -> VARIABLE[y]),
+VARIABLE[i:0..N] = (write[x:0..N] -> VARIABLE[x]
+				   |read[i] -> VARIABLE[i]).

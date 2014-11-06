@@ -1,0 +1,11 @@
+const N = 3
+range P = 1..2		//thread identities
+range C = 0..N		//counter range for lock
+
+RECURSIVE_LOCK = ([p:P].aquire -> RECURSIVE_LOCK[1][p]),
+ 
+RECURSIVE_LOCK[i:C][p:P] = (when(i<N) [p].aquire -> RECURSIVE_LOCK[i+1][p]
+					       |when(i>1) [p].release -> RECURSIVE_LOCK[i-1][p]
+					       |when(i==1) [p].release -> RECURSIVE_LOCK
+						   ).
+

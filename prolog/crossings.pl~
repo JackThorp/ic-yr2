@@ -1,0 +1,178 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                            %
+%         276 Introduction to Prolog         %
+%                                            %
+%         Coursework 2013-14 (crossings)     %
+%                                            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%% ------------  (utilities) DO NOT EDIT
+
+fees(2,3).   
+
+
+forall(P,Q) :- \+ (P, \+ Q).
+
+
+app_remove(X,List,Remainder) :-
+  append(Front, [X|Back], List),
+  append(Front, Back, Remainder).
+
+
+% The following might be useful for testing.
+% You may edit it if you want to adjust
+% the layout. DO NOT USE it in your submitted code.
+
+write_list(List) :-
+  forall(member(X, List),
+         (write('  '), write(X), nl)
+        ).
+
+
+% solutions for testing 
+
+solution([f(g),f,f(w),f(g),f(c),f,f(b),f,f(g)]).
+solution([f(g),f,f(c),f(g),f(w),f,f(b),f,f(g)]).
+solution([f(g),f,f(b),f,f(w),f(g),f(c),f,f(g)]).
+solution([f(g),f,f(b),f,f(c),f(g),f(w),f,f(g)]).
+
+
+%% --------- END (utilities)
+
+
+
+%% ------ Step 1.
+
+safe([f|_]).
+safe([_]).
+safe(Bank) :-
+  member(w,Bank)
+  ->
+    \+ member(g,Bank)
+  ;
+  member(g,Bank)
+  ->
+    \+ member(c, Bank)
+  ; 
+  true.
+
+%% ------ Step 2.
+
+safe_state(X-Y) :-
+  safe(X),
+  safe(Y).
+
+%% ------ Step 3.
+
+equiv(A-B, X-Y) :-
+  equivBanks(A,X),
+  equivBanks(B,Y).
+
+iff(P,Q) :- forall(P,Q), forall(Q,P).
+
+/*equivBanks(A-B, X-Y) :-
+  iff(member(I,A), member(I,X)),
+  iff(member(G,B), member(G,Y)).
+*/
+
+equivBanks([],[]).
+equivBanks([X|XS],B2) :-
+  member(X,B2),
+  remove(X,B2,R),
+  equivBanks(XS,R).
+/*
+remove(X,L,R) :-
+  remove(X,L,[],R).
+
+remove(X, [X|Xs], Pre, Rem) :-
+  append(Pre, Xs, Rem).
+
+remove(X, [Y|Xs], Pre, Rem) :- 
+  append(Pre, [Y], NewPre),
+  remove(X, Xs, NewPre, Rem).
+*/
+
+
+
+%% ------ Step 4.
+
+goal([]-[f|Items]) :-
+  forall(member(X, [w,g,c,b]), member(X,Items)).
+
+
+%% ------ Step 5.
+
+visited(X,Hist) :-  
+  member(Y,Hist),
+  equiv(X,Y).
+
+
+
+%% ------ Step 6.
+
+remove(X,[X|Rest], Rest).
+remove(X,[Y|Rest],[Y|Rest2]) :-
+  remove(X,Rest, Rest2). 
+
+
+
+%% ------ Step 7.
+
+crossing([f|X]-Y, f(I), R-[f,I|Y]) :- member(I,X), remove(I,X,R).
+
+crossing(X-[f|Y], f(I), [f,I|X]-R) :- member(I,Y), remove(I,Y,R).
+
+crossing([f|X]-Y, f, X-[f|Y]).
+crossing(X-[f|Y], f, [f|X]-Y).
+
+
+
+%% ------ Step 8.
+
+succeeds(Sequence) :-
+  journey([f,w,g,c,b]-[], [], Sequence).
+
+journey(State,_,[]) :- goal(State).
+journey(State,Hist,NewSeq) :-
+  crossing(State, C, NewState),
+  \+ visited(NewState, Hist),
+  safe_state(NewState),
+  append(Seq, [C], NewSeq), !,
+  journey(NewState, [State|Hist], Seq).
+
+
+   
+%% ------ Step 9.
+
+/*succeeds(Sequence) :- solution(Sequence). */
+
+journey_cost(Sequence, Cost) :-
+  succeeds(Sequence),
+  totalCost(Sequence, X),
+  Cost is X.
+
+costs(f, X) :- fees(X,_). 
+costs(f(_), X) :-  fees(_,X).
+
+totalCost([], F) :- F is 0.
+totalCost([X|Xs], Cost) :-
+  costs(X,F),
+  Cost = (F + Fs),
+  totalCost(Xs, Fs). 
+   
+
+
+
+/*  Remove the following comments if you wish to skip Step 6 */
+
+/* 
+
+remove(X,List,Remainder) :-
+  app_remove(X,List,Remainder).
+
+*/
+
+
+

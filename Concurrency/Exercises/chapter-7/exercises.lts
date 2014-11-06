@@ -1,0 +1,30 @@
+
+//Q1)
+//property PS = (a -> (b-> PS | a -> PS) | b -> a -> PS).
+
+//Q2)
+//const Max = 10
+//range R = 0..Max 
+//property Capacity = Capacity[0],
+//Capacity[n:R] = (when(n<Max) enter -> Capacity[n+1]
+//                | exit -> Capacity[n-1]
+//				).
+
+
+//Q3)
+CARPARKCONTROL(N=4) = SPACES[N],
+SPACES[i:0..N]= ( when(i>0) arrive->SPACES[i-1]
+| when(i<N) depart->SPACES[i+1]
+).
+
+ARRIVALS = (arrive->ARRIVALS).
+DEPARTURES = (depart->DEPARTURES).
+
+property OVERFLOW(N=4) = OVERFLOW[0],
+OVERFLOW[n:0..N] = (when(n<=N) arrive -> OVERFLOW[n+1]
+				   | depart -> OVERFLOW[n-1]
+				   ).
+
+progress Enters = {arrive}
+
+||CARPARK = (ARRIVALS||CARPARKCONTROL(4)||DEPARTURES||OVERFLOW(3)) >>{depart}.

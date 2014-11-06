@@ -1,0 +1,11 @@
+<h1>Hello, Rails!</h1>
+<%= link_to "My Blog", posts_path %> 
+<h2> RAARR </h2>
+<div id="News">
+  <h3> In Recent news</h3>
+  <ul>
+  <% for entry in FeedEntry.all(:limit => 10, :order => "published_at desc") %>
+    <li><%= link_to h(entry.name), entry.url %></li>
+  <% end %>
+  </ul>
+</div>

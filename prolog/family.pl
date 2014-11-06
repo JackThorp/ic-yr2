@@ -1,0 +1,118 @@
+/*
+
+    MAC, MCSs, MRes - 
+    Module 531: Laboratory (Prolog)
+
+    Comp 2: 276 Introduction to Prolog
+
+    File: family.pl - cjh
+
+*/
+
+child_of( emmeline, frank ). 
+child_of( amelia, frank ).
+child_of( harold, frank ).
+child_of( chris, amelia ).
+child_of( chris, john ).
+child_of( emlyn, chris ).
+child_of( emlyn, elizabeth ).
+child_of( brendon, chris ).
+child_of( brendon, elizabeth ). 
+child_of( irene, maurice ).
+child_of( les, maurice ).
+child_of( elizabeth, irene ).
+child_of( elizabeth, george ).
+child_of( margaret, irene ).
+child_of( margaret, george ).
+child_of( rebecca, margaret ).
+child_of( louise, margaret ).   
+child_of( nick, margaret ).
+child_of( rebecca, peter ).
+child_of( louise, peter ).
+child_of( nick, peter ).
+
+male( frank ).   
+male( harold ).
+male( chris ).
+male( john ).
+male( emlyn ).
+male( brendon ).
+male( maurice ).
+male( les ).
+male( nick ).
+male( peter ).
+male( george ).
+
+female( emmeline ).
+female( amelia ).
+female( elizabeth ).
+female( irene ).
+female( margaret ).
+female( rebecca ).
+female( louise ).
+
+mother_of( M, X ) :- 
+	child_of( X, M ),
+	female( M ). 
+
+grandparent_of( GP, X ) :-
+	child_of( P, GP),
+	child_of( X, P).
+
+daughter_of( D, X ) :-
+	child_of( D, X),
+	female( D ).
+
+sister_of( X, Y) :-
+	child_of( X, Z ),
+	child_of( Y, Z ),
+	X \= Y,
+	female(X).
+
+uncle_of( Unc, X ) :-
+	child_of( Unc, GP),
+	child_of( P, GP),
+	child_of( X, P ),
+	Unc \= P,
+	male(Unc).
+
+auntie_of( Aun, X ) :-
+	child_of( Aun, GP),
+	child_of( P, GP),
+	child_of( X, P ),
+	Aun \= P,
+	female(Aun).
+
+niece_of( N, X) :-
+	uncle_of( X, N ),
+	female(N).
+
+neice_of( N, X) :-
+	auntie_of( X, N ),
+	female(N).
+
+ancestor_of( Anc, X ) :-
+	child_of( X, Anc).
+
+ancestor_of( Anc, X ) :-
+	child_of( C, Anc),
+	ancestor_of( C, X). 
+
+
+% end of data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
